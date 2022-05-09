@@ -11,8 +11,12 @@ public:
 	const Rational operator-() const;
 	Rational& operator+=(const Rational& right);
 	Rational& operator-=(const Rational& right);
+	Rational& operator*=(const Rational& right);
+	Rational& operator/=(const Rational& right);
 	friend const Rational operator+(const Rational& left, const Rational& right);
 	friend const Rational operator-(const Rational& left, const Rational& right);
+	friend const Rational operator*(const Rational& left, const Rational& right);
+	friend const Rational operator/(const Rational& left, const Rational& right);
 
 	int GetNumerator() const;
 	int GetDenominator() const;

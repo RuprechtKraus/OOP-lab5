@@ -148,5 +148,95 @@ namespace RationalTest
 			Assert::AreEqual(-1, num.GetNumerator(), L"Numerators dont't match");
 			Assert::AreEqual(2, num.GetDenominator(), L"Denominators dont't match");
 		}
+
+		TEST_METHOD(MultiplicationOfRationalAndRational)
+		{
+			Rational num1(1, 2);
+			Rational num2(2, 3);
+			Rational result = num1 * num2;
+			Assert::AreEqual(1, result.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(3, result.GetDenominator(), L"Denominators dont't match");
+		}
+
+		TEST_METHOD(MultiplicationOfRationalAndInteger)
+		{
+			Rational num(1, 2);
+			Rational result = num * -3;
+			Assert::AreEqual(-3, result.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(2, result.GetDenominator(), L"Denominators dont't match");
+		}
+
+		TEST_METHOD(MultiplicationOfIntegerAndRational)
+		{
+			Rational num(2, 3);
+			Rational result = 7 * num;
+			Assert::AreEqual(14, result.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(3, result.GetDenominator(), L"Denominators dont't match");
+		}
+
+		TEST_METHOD(DivisionOfRationalAndRational)
+		{
+			Rational num1(1, 2);
+			Rational num2(2, 3);
+			Rational result = num1 / num2;
+			Assert::AreEqual(3, result.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(4, result.GetDenominator(), L"Denominators dont't match");
+		}
+
+		TEST_METHOD(DivisionOfRationalAndInteger)
+		{
+			Rational num(1, 2);
+			Rational result = num / 5;
+			Assert::AreEqual(1, result.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(10, result.GetDenominator(), L"Denominators dont't match");
+		}
+
+		TEST_METHOD(DivisionOfIntegerAndRational)
+		{
+			Rational num(2, 3);
+			Rational result = 7 / num;
+			Assert::AreEqual(21, result.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(2, result.GetDenominator(), L"Denominators dont't match");
+		}
+
+		TEST_METHOD(MultiplicationByRationalWithAssignment)
+		{
+			Rational num1(1, 2);
+			Rational num2(2, 3);
+			num1 *= num2;
+			Assert::AreEqual(1, num1.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(3, num1.GetDenominator(), L"Denominators dont't match");
+		}
+
+		TEST_METHOD(MultiplicationByIntegerWithAssignment)
+		{
+			Rational num(1, 2);
+			num *= 3;
+			Assert::AreEqual(3, num.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(2, num.GetDenominator(), L"Denominators dont't match");
+		}
+
+		TEST_METHOD(DivisionByRationalWithAssignment)
+		{
+			Rational num1(1, 2);
+			Rational num2(2, 3);
+			num1 /= num2;
+			Assert::AreEqual(3, num1.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(4, num1.GetDenominator(), L"Denominators dont't match");
+
+			Rational num3(3, 4);
+			Rational num4(3, 8);
+			num3 /= num4;
+			Assert::AreEqual(2, num3.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(1, num3.GetDenominator(), L"Denominators dont't match");
+		}
+
+		TEST_METHOD(DivisionByIntegerWithAssignment)
+		{
+			Rational num(1, 2);
+			num /= 3;
+			Assert::AreEqual(1, num.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(6, num.GetDenominator(), L"Denominators dont't match");
+		}
 	};
 }

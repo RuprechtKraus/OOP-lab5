@@ -77,6 +77,18 @@ Rational& Rational::operator-=(const Rational& right)
 	return *this;
 }
 
+Rational& Rational::operator*=(const Rational& right)
+{
+	*this = *this * right;
+	return *this;
+}
+
+Rational& Rational::operator/=(const Rational& right)
+{
+	*this = *this / right;
+	return *this;
+}
+
 const Rational operator+(const Rational& left, const Rational& right)
 {
 	int lcm = std::lcm(left.m_denominator, right.m_denominator);
@@ -90,4 +102,21 @@ const Rational operator+(const Rational& left, const Rational& right)
 const Rational operator-(const Rational& left, const Rational& right)
 {
 	return -right + left;
+}
+
+const Rational operator*(const Rational& left, const Rational& right)
+{
+	return {
+		left.m_numerator * right.m_numerator, left.m_denominator * right.m_denominator
+	};
+}
+
+const Rational operator/(const Rational& left, const Rational& right)
+{
+	if (right.m_numerator == 0)
+	{
+		throw std::invalid_argument("Division by zero");
+	}
+
+	return left * Rational{ right.m_denominator, right.m_numerator };
 }
