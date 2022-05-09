@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 class Rational
 {
@@ -23,6 +24,7 @@ public:
 	friend bool operator<=(const Rational& left, const Rational& right);
 	friend bool operator>(const Rational& left, const Rational& right);
 	friend bool operator>=(const Rational& left, const Rational& right);
+	friend std::ostream& operator<<(std::ostream& os, const Rational& rational);
 
 	int GetNumerator() const;
 	int GetDenominator() const;

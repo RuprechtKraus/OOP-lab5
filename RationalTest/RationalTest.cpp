@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "CppUnitTest.h"
 #include "Rational.h"
+#include <sstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -271,6 +272,15 @@ namespace RationalTest
 			Assert::IsTrue(Rational{ 4, 7 } <= Rational{ 4, 7 }, L"Numbers aren't equal");
 			Assert::IsFalse(Rational{ 4, 7 } < Rational{ 4, 7 }, L"Numbers aren't equal");
 			Assert::IsFalse(Rational{ 4, 7 } > Rational{ 4, 7 }, L"Numbers aren't equal");
+		}
+
+		TEST_METHOD(PrintRationalNumberToStream)
+		{
+			Rational num(7, 15);
+			std::ostringstream ss;
+
+			ss << num;
+			Assert::IsTrue("7/15" == ss.str(), L"Output was incorrect");
 		}
 	};
 }

@@ -150,3 +150,9 @@ bool operator>=(const Rational& left, const Rational& right)
 {
 	return left > right || left == right;
 }
+
+std::ostream& operator<<(std::ostream& os, const Rational& rational)
+{
+	os << rational.m_numerator << '/' << rational.m_denominator;
+	return os;
+}
