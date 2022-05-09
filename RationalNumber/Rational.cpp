@@ -120,3 +120,33 @@ const Rational operator/(const Rational& left, const Rational& right)
 
 	return left * Rational{ right.m_denominator, right.m_numerator };
 }
+
+bool operator==(const Rational& left, const Rational& right)
+{
+	return left.m_numerator == right.m_numerator && left.m_denominator == right.m_denominator;
+}
+
+bool operator!=(const Rational& left, const Rational& right)
+{
+	return !(left == right);
+}
+
+bool operator<(const Rational& left, const Rational& right)
+{
+	return left.ToDouble() < right.ToDouble();
+}
+
+bool operator<=(const Rational& left, const Rational& right)
+{
+	return left < right || left == right;
+}
+
+bool operator>(const Rational& left, const Rational& right)
+{
+	return !(left <= right);
+}
+
+bool operator>=(const Rational& left, const Rational& right)
+{
+	return left > right || left == right;
+}

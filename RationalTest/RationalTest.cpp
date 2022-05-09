@@ -238,5 +238,39 @@ namespace RationalTest
 			Assert::AreEqual(1, num.GetNumerator(), L"Numerators dont't match");
 			Assert::AreEqual(6, num.GetDenominator(), L"Denominators dont't match");
 		}
+
+		TEST_METHOD(RationalNumbersAreEqual)
+		{
+			Assert::IsTrue(Rational{ 1, 2 } == Rational{ 1, 2 }, L"Numbers aren't equal");
+			Assert::IsFalse(Rational{ 1, 2 } == Rational{ 2, 3 }, L"Numbers aren't equal");
+			Assert::IsTrue(Rational{ 4, 1 } == Rational{ 4 }, L"Numbers aren't equal");
+			Assert::IsFalse(Rational{ 1, 2 } == Rational{ 7 }, L"Numbers aren't equal");
+			Assert::IsTrue(Rational{ 3 } == Rational{ 3, 1 }, L"Numbers aren't equal");
+			Assert::IsFalse(Rational{ 3 } == Rational{ 2, 3 }, L"Numbers aren't equal");
+		}
+
+		TEST_METHOD(RationalNumbersAreNotEqual)
+		{
+			Assert::IsFalse(Rational{ 1, 2 } != Rational{ 1, 2 }, L"Numbers aren't equal");
+			Assert::IsTrue(Rational{ 1, 2 } != Rational{ 2, 3 }, L"Numbers aren't equal");
+			Assert::IsFalse(Rational{ 4, 1 } != Rational{ 4 }, L"Numbers aren't equal");
+			Assert::IsTrue(Rational{ 1, 2 } != Rational{ 7 }, L"Numbers aren't equal");
+			Assert::IsFalse(Rational{ 3 } != Rational{ 3, 1 }, L"Numbers aren't equal");
+			Assert::IsTrue(Rational{ 3 } != Rational{ 2, 3 }, L"Numbers aren't equal");
+		}
+
+		TEST_METHOD(RationalNumbersComparison)
+		{
+			Assert::IsTrue(Rational{ 1, 2 } >= Rational{ 1, 3 }, L"Numbers aren't equal");
+			Assert::IsFalse(Rational{ 1, 2 } <= Rational{ 1, 3 }, L"Numbers aren't equal");
+			Assert::IsTrue(Rational{ 3, 1 } > Rational{ 2 }, L"Numbers aren't equal");
+			Assert::IsTrue(Rational{ 1, 2 } < Rational{ 7 }, L"Numbers aren't equal");
+			Assert::IsTrue(Rational{ 3 } <= Rational{ 7, 2 }, L"Numbers aren't equal");
+			Assert::IsFalse(Rational{ 3 } >= Rational{ 8, 2 }, L"Numbers aren't equal");
+			Assert::IsTrue(Rational{ 4, 7 } >= Rational{ 4, 7 }, L"Numbers aren't equal");
+			Assert::IsTrue(Rational{ 4, 7 } <= Rational{ 4, 7 }, L"Numbers aren't equal");
+			Assert::IsFalse(Rational{ 4, 7 } < Rational{ 4, 7 }, L"Numbers aren't equal");
+			Assert::IsFalse(Rational{ 4, 7 } > Rational{ 4, 7 }, L"Numbers aren't equal");
+		}
 	};
 }

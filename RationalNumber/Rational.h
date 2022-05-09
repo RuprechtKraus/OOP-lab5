@@ -17,6 +17,12 @@ public:
 	friend const Rational operator-(const Rational& left, const Rational& right);
 	friend const Rational operator*(const Rational& left, const Rational& right);
 	friend const Rational operator/(const Rational& left, const Rational& right);
+	friend bool operator==(const Rational& left, const Rational& right);
+	friend bool operator!=(const Rational& left, const Rational& right);
+	friend bool operator<(const Rational& left, const Rational& right);
+	friend bool operator<=(const Rational& left, const Rational& right);
+	friend bool operator>(const Rational& left, const Rational& right);
+	friend bool operator>=(const Rational& left, const Rational& right);
 
 	int GetNumerator() const;
 	int GetDenominator() const;
