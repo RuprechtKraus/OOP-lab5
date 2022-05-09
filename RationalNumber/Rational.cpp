@@ -1,6 +1,6 @@
 #include "Rational.h"
-#include <stdexcept>
 #include <numeric>
+#include <stdexcept>
 
 Rational::Rational()
 	: m_numerator(0)
@@ -52,5 +52,42 @@ int Rational::GetDenominator() const
 
 double Rational::ToDouble() const
 {
-	return {};
+	return static_cast<double>(m_numerator) / static_cast<double>(m_denominator);
+}
+
+const Rational Rational::operator+() const
+{
+	return *this;
+}
+
+const Rational Rational::operator-() const
+{
+	return { -m_numerator, m_denominator };
+}
+
+Rational& Rational::operator+=(const Rational& right)
+{
+	*this = *this + right;
+	return *this;
+}
+
+Rational& Rational::operator-=(const Rational& right)
+{
+	*this = *this - right;
+	return *this;
+}
+
+const Rational operator+(const Rational& left, const Rational& right)
+{
+	int lcm = std::lcm(left.m_denominator, right.m_denominator);
+
+	return {
+		left.m_numerator * (lcm / left.m_denominator) + right.m_numerator * (lcm / right.m_denominator),
+		lcm
+	};
+}
+
+const Rational operator-(const Rational& left, const Rational& right)
+{
+	return -right + left;
 }
