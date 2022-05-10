@@ -25,10 +25,12 @@ public:
 	friend bool operator>(const Rational& left, const Rational& right);
 	friend bool operator>=(const Rational& left, const Rational& right);
 	friend std::ostream& operator<<(std::ostream& os, const Rational& rational);
+	friend std::istream& operator>>(std::istream& is, Rational& rational);
 
 	int GetNumerator() const;
 	int GetDenominator() const;
 	double ToDouble() const;
+	std::pair<int, Rational> ToCompoundFraction() const;
 
 private:
 	void Normalize();

@@ -55,6 +55,14 @@ double Rational::ToDouble() const
 	return static_cast<double>(m_numerator) / static_cast<double>(m_denominator);
 }
 
+std::pair<int, Rational> Rational::ToCompoundFraction() const
+{
+	int wholeNumber{ m_numerator / m_denominator };
+	Rational rational(std::abs(m_numerator) - m_denominator * std::abs(wholeNumber), m_denominator);
+
+	return { wholeNumber, rational };
+}
+
 const Rational Rational::operator+() const
 {
 	return *this;
@@ -155,4 +163,22 @@ std::ostream& operator<<(std::ostream& os, const Rational& rational)
 {
 	os << rational.m_numerator << '/' << rational.m_denominator;
 	return os;
+}
+
+std::istream& operator>>(std::istream& is, Rational& rational)
+{
+	char divisionSign{};
+	int numerator{};
+	int denominator{};
+
+	if (!(is >> numerator) || !(is >> divisionSign) || divisionSign != '/' || !(is >> denominator))
+	{
+		return is;
+	}
+
+	rational.m_numerator = numerator;
+	rational.m_denominator = denominator;
+	rational.Normalize();
+
+	return is;
 }

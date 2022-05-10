@@ -282,5 +282,29 @@ namespace RationalTest
 			ss << num;
 			Assert::IsTrue("7/15" == ss.str(), L"Output was incorrect");
 		}
+
+		TEST_METHOD(ReadRationalNumberFromStream)
+		{
+			Rational num;
+			std::istringstream ss("7/15");
+
+			ss >> num;
+			Assert::AreEqual(7, num.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(15, num.GetDenominator(), L"Denominators dont't match");
+		}
+
+		TEST_METHOD(RationalNumberToCompoundFraction)
+		{
+			auto compound1{ Rational(9, 4).ToCompoundFraction() };
+			auto compound2{ Rational(-9, 4).ToCompoundFraction() };
+
+			Assert::AreEqual(2, compound1.first, L"Whole numbers dont't match");
+			Assert::AreEqual(1, compound1.second.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(4, compound1.second.GetDenominator(), L"Denominators dont't match");
+
+			Assert::AreEqual(-2, compound2.first, L"Whole numbers dont't match");
+			Assert::AreEqual(1, compound2.second.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(4, compound2.second.GetDenominator(), L"Denominators dont't match");
+		}
 	};
 }
