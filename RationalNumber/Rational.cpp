@@ -167,18 +167,19 @@ std::ostream& operator<<(std::ostream& os, const Rational& rational)
 
 std::istream& operator>>(std::istream& is, Rational& rational)
 {
-	char divisionSign{};
 	int numerator{};
 	int denominator{};
 
-	if (!(is >> numerator) || !(is >> divisionSign) || divisionSign != '/' || !(is >> denominator))
+	if (is >> numerator && is.get() == '/' && is >> denominator)
 	{
-		return is;
+		rational.m_numerator = numerator;
+		rational.m_denominator = denominator;
+		rational.Normalize();
 	}
-
-	rational.m_numerator = numerator;
-	rational.m_denominator = denominator;
-	rational.Normalize();
+	else
+	{
+		is.setstate(std::ios_base::failbit | is.rdstate());
+	}
 
 	return is;
 }
