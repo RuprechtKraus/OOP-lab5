@@ -58,17 +58,17 @@ double Rational::ToDouble() const
 std::pair<int, Rational> Rational::ToCompoundFraction() const
 {
 	int wholeNumber{ m_numerator / m_denominator };
-	Rational rational(std::abs(m_numerator) - m_denominator * std::abs(wholeNumber), m_denominator);
+	Rational rational(m_numerator - m_denominator * wholeNumber, m_denominator);
 
 	return { wholeNumber, rational };
 }
 
-const Rational Rational::operator+() const
+Rational Rational::operator+() const
 {
 	return *this;
 }
 
-const Rational Rational::operator-() const
+Rational Rational::operator-() const
 {
 	return { -m_numerator, m_denominator };
 }

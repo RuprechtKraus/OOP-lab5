@@ -303,7 +303,7 @@ namespace RationalTest
 			Assert::AreEqual(4, compound1.second.GetDenominator(), L"Denominators dont't match");
 
 			Assert::AreEqual(-2, compound2.first, L"Whole numbers dont't match");
-			Assert::AreEqual(1, compound2.second.GetNumerator(), L"Numerators dont't match");
+			Assert::AreEqual(-1, compound2.second.GetNumerator(), L"Numerators dont't match");
 			Assert::AreEqual(4, compound2.second.GetDenominator(), L"Denominators dont't match");
 		}
 	};

@@ -8,8 +8,8 @@ public:
 	Rational(int value);
 	Rational(int numerator, int denominator);
 
-	const Rational operator+() const;
-	const Rational operator-() const;
+	Rational operator+() const;
+	Rational operator-() const;
 	Rational& operator+=(const Rational& right);
 	Rational& operator-=(const Rational& right);
 	Rational& operator*=(const Rational& right);

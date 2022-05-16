@@ -14,17 +14,15 @@ MyString::MyString(const char* pStr)
 		throw std::invalid_argument("Null pointer");
 	}
 
-	m_size = strlen(pStr);
+	size_t len = strlen(pStr);
 
-	if (m_size == 0)
+	if (len == 0)
 	{
 		SetEmpty();
 	}
 	else
 	{
-		m_data = new char[m_size + 1];
-		memcpy(m_data, pStr, m_size);
-		m_data[m_size] = '\0';
+		AllocateMemoryAndCopyString(len, pStr);
 	}
 }
 
@@ -35,20 +33,12 @@ MyString::MyString(const char* pStr, size_t length)
 		throw std::invalid_argument("Null pointer");
 	}
 
-	m_size = length;
-
-	m_data = new char[m_size + 1];
-	memcpy(m_data, pStr, m_size);
-	m_data[m_size] = '\0';
+	AllocateMemoryAndCopyString(length, pStr);
 }
 
 MyString::MyString(const MyString& other) noexcept
 {
-	m_size = other.m_size;
-
-	m_data = new char[m_size + 1];
-	memcpy(m_data, other.m_data, m_size);
-	m_data[m_size] = '\0';
+	AllocateMemoryAndCopyString(other.m_size, other.m_data);
 }
 
 MyString::MyString(MyString&& other) noexcept
@@ -59,11 +49,8 @@ MyString::MyString(MyString&& other) noexcept
 
 MyString::MyString(const std::string& str) noexcept
 {
-	m_size = str.size();
-
-	m_data = new char[m_size + 1];
-	memcpy(m_data, str.c_str(), m_size);
-	m_data[m_size] = '\0';
+	
+	AllocateMemoryAndCopyString(str.size(), str.c_str());
 }
 
 MyString& MyString::operator=(const MyString& other) noexcept
@@ -106,12 +93,91 @@ MyString operator+(const MyString& left, const MyString& right) noexcept
 
 bool operator==(const MyString& left, const MyString& right) noexcept
 {
-	return left.m_size == right.m_size ? memcmp(left.m_data, right.m_data, left.m_size) == 0 : false;
+	return MyString::Compare(left, right) == 0;
 }
 
 bool operator!=(const MyString& left, const MyString& right) noexcept
 {
 	return !(left == right);
+}
+
+bool operator<(const MyString& left, const MyString& right) noexcept
+{
+	return MyString::Compare(left, right) == -1;
+}
+
+bool operator<=(const MyString& left, const MyString& right) noexcept
+{
+	return left < right || left == right;
+}
+
+bool operator>(const MyString& left, const MyString& right) noexcept
+{
+	return MyString::Compare(left, right) == 1;
+}
+
+bool operator>=(const MyString& left, const MyString& right) noexcept
+{
+	return left > right || left == right;
+}
+
+std::ostream& operator<<(std::ostream& os, const MyString& myString) noexcept
+{
+	return os.write(myString.m_data, myString.m_size);
+}
+
+std::istream& operator>>(std::istream& is, MyString& myString) noexcept
+{
+	int capacity = 10;
+	char* buff = new char[capacity];
+	char c{};
+	int n{};
+
+	while ((c = is.get()) != ' ' && is)
+	{
+		buff[n++] = c;
+		if (n == capacity)
+		{
+			char* tmp = new char[capacity];
+			memcpy(tmp, buff, n);
+			capacity *= 2;
+			delete[] buff;
+			buff = new char[capacity];
+			memcpy(buff, tmp, n);
+			delete[] tmp;
+		}
+	}
+
+	buff[n] = '\0';
+	MyString tmp(buff);
+	std::swap(myString.m_data, tmp.m_data);
+	std::swap(myString.m_size, tmp.m_size);
+
+	is.clear();
+
+	delete[] buff;
+
+	return is;
+}
+
+const char& MyString::operator[](size_t index) const
+{
+	if (index >= m_size)
+	{
+		throw std::out_of_range("Subscript is out of bounds");
+	}
+
+	return m_data[index];
+}
+
+char& MyString::operator[](size_t index)
+{
+	if (index >= m_size)
+	{
+		throw std::out_of_range("Subscript is out of bounds");
+	}
+
+	return m_data[index];
 }
 
 size_t MyString::GetLength() const noexcept
@@ -140,4 +206,27 @@ void MyString::SetEmpty() noexcept
 	m_size = 0;
 	m_data = new char[1];
 	m_data[0] = '\0';
+}
+
+void MyString::AllocateMemoryAndCopyString(size_t size, const char* source)
+{
+	m_size = size;
+	m_data = new char[size + 1];
+	memcpy(m_data, source, size);
+	m_data[size] = '\0';
+}
+
+int MyString::Compare(const MyString& left, const MyString& right) noexcept
+{
+	if (left.m_size < right.m_size)
+	{
+		return -1;
+	}
+	
+	if (left.m_size > right.m_size)
+	{
+		return 1;
+	}
+
+	return memcmp(left.m_data, right.m_data, left.m_size);
 }

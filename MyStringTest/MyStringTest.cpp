@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "CppUnitTest.h"
 #include "MyString.h"
+#include <sstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -132,7 +133,7 @@ namespace MyStringClassTest
 			VerifyMyString(hello, "Hello world!", 12);
 		}
 
-		TEST_METHOD(CompareMyStrings)
+		TEST_METHOD(CompareEqual)
 		{
 			Assert::IsTrue(MyString("string") == MyString("string"), L"Equal string compare failed");
 			Assert::IsTrue(MyString("MiXeD CaSe") == MyString("MiXeD CaSe"), L"Mixed case compare failed");
@@ -147,6 +148,75 @@ namespace MyStringClassTest
 				L"Strings with null-characters compare failed");
 			Assert::IsTrue(MyString("atoms\0\0absu", 13) != MyString("atoms\0\0abs", 10), 
 				L"Strings with null-characters compare failed");
+		}
+
+		TEST_METHOD(CompareLess)
+		{
+			Assert::IsTrue(MyString("abc") < MyString("abcd"), L"Left string must be less");
+			Assert::IsTrue(MyString("abc") <= MyString("abcd"), L"Left string must be less");
+			Assert::IsTrue(MyString("abc") <= MyString("abc"), L"Strings must be equal");
+			Assert::IsFalse(MyString("abcd") < MyString("abc"), L"Right string must be less");
+			Assert::IsFalse(MyString("abcd") <= MyString("abc"), L"Right string must be less");
+		}
+
+		TEST_METHOD(CompareGreater)
+		{
+			Assert::IsFalse(MyString("abc") > MyString("abcd"), L"Right string must be greater");
+			Assert::IsFalse(MyString("abc") >= MyString("abcd"), L"Right string must be greater");
+			Assert::IsTrue(MyString("abcd") > MyString("abc"), L"Left string must be greater");
+			Assert::IsTrue(MyString("abcd") >= MyString("abc"), L"Left string must be greater");
+			Assert::IsTrue(MyString("abcd") >= MyString("abcd"), L"String must be equal");
+		}
+
+		TEST_METHOD(SubscriptOperatorWithIndexWithinBounds)
+		{
+			MyString myString("Moss");
+			myString[0] = 'B';
+
+			Assert::AreEqual("Boss", myString.GetStringData(), L"Words don't match");
+		}
+
+		TEST_METHOD(SubscriptOperatorWithIndexOutOfBounds)
+		{
+			MyString myString("Moss");
+			auto callSubscript = [&myString]() { myString[10]; };
+			Assert::ExpectException<std::out_of_range>(callSubscript, L"Exception had to be thrown");
+		}
+
+		TEST_METHOD(PrintMyStringToStream)
+		{
+			MyString myString("Hello world!");
+			std::ostringstream ss;
+
+			ss << myString;
+			Assert::IsTrue("Hello world!" == ss.str(), L"Output was incorrect");	
+		}
+
+		TEST_METHOD(PrintMyStringWithNullCharsInMiddleToStream)
+		{
+			MyString myString("abc\0\0abc", 8);
+			std::ostringstream ss;
+
+			ss << myString;
+			Assert::IsTrue(memcmp(ss.str().c_str(), "abcabc", myString.GetLength()), L"Output was incorrect");
+		}
+
+		TEST_METHOD(ReadMyStringFromStreamUntilSpace)
+		{
+			MyString myString("");
+			std::istringstream ss("Hello world!");
+
+			ss >> myString;
+			VerifyMyString(myString, "Hello", 5);
+		}
+
+		TEST_METHOD(ReadMyStringFromStreamUntilEnd)
+		{
+			MyString myString("");
+			std::istringstream ss("Hello_world!");
+
+			ss >> myString;
+			VerifyMyString(myString, "Hello_world!", 12);
 		}
 	};
 }
