@@ -63,6 +63,16 @@ MyString& MyString::operator=(const MyString& other) noexcept
 	return *this;
 }
 
+MyString& MyString::operator=(MyString&& other) noexcept
+{
+	if (this != &other)
+	{
+		MyString::Swap(*this, other);
+	}
+
+	return *this;
+}
+
 MyString& MyString::operator+=(const MyString& other) noexcept
 {
 	*this = *this + other;

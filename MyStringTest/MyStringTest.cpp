@@ -85,6 +85,25 @@ namespace MyStringClassTest
 			VerifyMyString(myString, "My string", 9);
 		}
 
+		TEST_METHOD(MoveAssignStringToAnother)
+		{
+			MyString first("First string");
+			first = std::move(MyString("Second string"));
+			VerifyMyString(first, "Second string", 13);
+		}
+
+		TEST_METHOD(MoveAssignStringToItself)
+		{
+			#pragma warning (push)
+			#pragma warning (disable: 26800)
+
+			MyString first("First string");
+			first = std::move(first);
+			VerifyMyString(first, "First string", 12);
+
+			#pragma warning (pop)
+		}
+
 		TEST_METHOD(ConcatenateMyStringWithMyString)
 		{
 			MyString hello("Hello ");

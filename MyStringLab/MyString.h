@@ -14,6 +14,7 @@ public:
 	~MyString() noexcept;
 
 	MyString& operator=(const MyString& other) noexcept;
+	MyString& operator=(MyString&& other) noexcept;
 	MyString& operator+=(const MyString& other) noexcept;
 
 	friend MyString operator+(const MyString& left, const MyString& right) noexcept;
