@@ -35,6 +35,7 @@ public:
 	void Clear() noexcept;
 
 	static int Compare(const MyString& left, const MyString& right) noexcept;
+	static void Swap(MyString& left, MyString& right) noexcept;
 
 private:
 	void SetEmpty() noexcept;

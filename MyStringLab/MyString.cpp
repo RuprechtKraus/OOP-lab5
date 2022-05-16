@@ -43,13 +43,12 @@ MyString::MyString(const MyString& other) noexcept
 
 MyString::MyString(MyString&& other) noexcept
 {
-	std::swap(m_data, other.m_data);
-	std::swap(m_size, other.m_size);
+	MyString::Swap(*this, other);
 }
 
 MyString::MyString(const std::string& str) noexcept
 {
-	
+
 	AllocateMemoryAndCopyString(str.size(), str.c_str());
 }
 
@@ -58,8 +57,7 @@ MyString& MyString::operator=(const MyString& other) noexcept
 	if (this != &other)
 	{
 		MyString tmp(other);
-		std::swap(m_data, tmp.m_data);
-		std::swap(m_size, tmp.m_size);
+		MyString::Swap(*this, tmp);
 	}
 
 	return *this;
@@ -128,33 +126,32 @@ std::ostream& operator<<(std::ostream& os, const MyString& myString) noexcept
 
 std::istream& operator>>(std::istream& is, MyString& myString) noexcept
 {
-	int capacity = 10;
+	int capacity{ 10 };
 	char* buff = new char[capacity];
-	char c{};
-	int n{};
+	char ch{};
+	int len{};
 
-	while ((c = is.get()) != ' ' && is)
+	while ((ch = is.get()) != ' ' && is)
 	{
-		buff[n++] = c;
-		if (n == capacity)
+		if (len == capacity)
 		{
 			char* tmp = new char[capacity];
-			memcpy(tmp, buff, n);
+			memcpy(tmp, buff, len);
 			capacity *= 2;
 			delete[] buff;
+
 			buff = new char[capacity];
-			memcpy(buff, tmp, n);
+			memcpy(buff, tmp, len);
 			delete[] tmp;
 		}
+
+		buff[len++] = ch;
 	}
 
-	buff[n] = '\0';
-	MyString tmp(buff);
-	std::swap(myString.m_data, tmp.m_data);
-	std::swap(myString.m_size, tmp.m_size);
+	MyString tmp(buff, len);
+	MyString::Swap(myString, tmp);
 
 	is.clear();
-
 	delete[] buff;
 
 	return is;
@@ -222,11 +219,17 @@ int MyString::Compare(const MyString& left, const MyString& right) noexcept
 	{
 		return -1;
 	}
-	
+
 	if (left.m_size > right.m_size)
 	{
 		return 1;
 	}
 
 	return memcmp(left.m_data, right.m_data, left.m_size);
+}
+
+void MyString::Swap(MyString& left, MyString& right) noexcept
+{
+	std::swap(left.m_size, right.m_size);
+	std::swap(left.m_data, right.m_data);
 }
