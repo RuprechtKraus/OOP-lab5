@@ -1,7 +1,7 @@
 #include "MyString.h"
+#include <cassert>
 #include <iostream>
 #include <stdexcept>
-#include <cassert>
 
 #pragma region MyString
 
@@ -293,16 +293,6 @@ MyStringIterator MyStringIterator::operator--(int)
 	return tmp;
 }
 
-const MyStringIterator operator+(const MyStringIterator& iter, int offset)
-{
-	return { iter.m_ptr + offset };
-}
-
-const MyStringIterator operator+(int offset, const MyStringIterator& iter)
-{
-	return iter + offset;
-}
-
 MyStringIterator& MyStringIterator::operator+=(int offset)
 {
 	*this = *this + offset;
@@ -322,6 +312,21 @@ MyStringIterator::reference MyStringIterator::operator*() const
 MyStringIterator::pointer MyStringIterator::operator->()
 {
 	return m_ptr;
+}
+
+const MyStringIterator operator+(const MyStringIterator& iter, int offset)
+{
+	return { iter.m_ptr + offset };
+}
+
+const MyStringIterator operator+(int offset, const MyStringIterator& iter)
+{
+	return iter + offset;
+}
+
+MyStringIterator::difference_type operator-(const MyStringIterator& left, const MyStringIterator& right)
+{
+	return left.m_ptr - right.m_ptr;
 }
 
 bool operator==(const MyStringIterator& left, const MyStringIterator& right)

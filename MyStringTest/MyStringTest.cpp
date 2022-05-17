@@ -287,5 +287,14 @@ namespace MyStringClassTest
 			it += 6;
 			Assert::AreEqual('w', *it, L"Letters don't match");
 		}
+
+		TEST_METHOD(DifferenceBetweenIterators)
+		{
+			MyString myString("Hello");
+			auto begin{ myString.begin() };
+			auto end{ myString.end() };
+
+			Assert::IsTrue(5 == end - begin, L"Difference between iterators is wrong");
+		}
 	};
 }

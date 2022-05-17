@@ -18,12 +18,12 @@ public:
 	MyStringIterator& operator--();
 	MyStringIterator operator--(int);
 	MyStringIterator& operator+=(int offset);
-	friend const MyStringIterator operator+(const MyStringIterator& iter, int offset);
-	friend const MyStringIterator operator+(int offset, const MyStringIterator& iter);
 	reference operator[](int index) const;
 	reference operator*() const;
 	pointer operator->();
-
+	friend const MyStringIterator operator+(const MyStringIterator& iter, int offset);
+	friend const MyStringIterator operator+(int offset, const MyStringIterator& iter);
+	friend difference_type operator-(const MyStringIterator& left, const MyStringIterator& right);
 	friend bool operator==(const MyStringIterator& left, const MyStringIterator& right);
 	friend bool operator!=(const MyStringIterator& left, const MyStringIterator& right);
 
