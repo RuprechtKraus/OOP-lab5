@@ -1,6 +1,9 @@
 #include "MyString.h"
 #include <iostream>
 #include <stdexcept>
+#include <cassert>
+
+#pragma region MyString
 
 MyString::MyString() noexcept
 {
@@ -243,3 +246,92 @@ void MyString::Swap(MyString& left, MyString& right) noexcept
 	std::swap(left.m_size, right.m_size);
 	std::swap(left.m_data, right.m_data);
 }
+
+MyString::Iterator MyString::begin() const
+{
+	return Iterator(m_data);
+}
+
+MyString::Iterator MyString::end() const
+{
+	return Iterator(m_data + m_size);
+}
+
+#pragma endregion MyString
+
+#pragma region MyStringIterator
+
+MyStringIterator::MyStringIterator(pointer ptr)
+	: m_ptr(ptr)
+{
+}
+
+MyStringIterator& MyStringIterator::operator++()
+{
+	m_ptr++;
+	return *this;
+}
+
+MyStringIterator MyStringIterator::operator++(int)
+{
+	MyStringIterator tmp{ *this };
+	++(*this);
+	return tmp;
+}
+
+MyStringIterator& MyStringIterator::operator--()
+{
+	m_ptr--;
+	return *this;
+}
+
+MyStringIterator MyStringIterator::operator--(int)
+{
+
+	MyStringIterator tmp{ *this };
+	--(*this);
+	return tmp;
+}
+
+const MyStringIterator operator+(const MyStringIterator& iter, int offset)
+{
+	return { iter.m_ptr + offset };
+}
+
+const MyStringIterator operator+(int offset, const MyStringIterator& iter)
+{
+	return iter + offset;
+}
+
+MyStringIterator& MyStringIterator::operator+=(int offset)
+{
+	*this = *this + offset;
+	return *this;
+}
+
+MyStringIterator::reference MyStringIterator::operator[](int index) const
+{
+	return *(m_ptr + index);
+}
+
+MyStringIterator::reference MyStringIterator::operator*() const
+{
+	return *m_ptr;
+}
+
+MyStringIterator::pointer MyStringIterator::operator->()
+{
+	return m_ptr;
+}
+
+bool operator==(const MyStringIterator& left, const MyStringIterator& right)
+{
+	return left.m_ptr == right.m_ptr;
+}
+
+bool operator!=(const MyStringIterator& left, const MyStringIterator& right)
+{
+	return left.m_ptr != right.m_ptr;
+}
+
+#pragma endregion MyStringIterator
