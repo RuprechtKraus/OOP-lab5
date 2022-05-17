@@ -247,14 +247,34 @@ void MyString::Swap(MyString& left, MyString& right) noexcept
 	std::swap(left.m_data, right.m_data);
 }
 
-MyString::Iterator MyString::begin() const
+MyString::Iterator MyString::begin()
 {
 	return Iterator(m_data);
 }
 
-MyString::Iterator MyString::end() const
+MyString::Iterator MyString::end()
 {
 	return Iterator(m_data + m_size);
+}
+
+MyString::ConstIterator MyString::begin() const
+{
+	return ConstIterator(m_data);
+}
+
+MyString::ConstIterator MyString::end() const
+{
+	return ConstIterator(m_data + m_size);
+}
+
+MyString::ConstIterator MyString::cbegin() const
+{
+	return begin();
+}
+
+MyString::ConstIterator MyString::cend() const
+{
+	return end();
 }
 
 #pragma endregion MyString
@@ -340,3 +360,85 @@ bool operator!=(const MyStringIterator& left, const MyStringIterator& right)
 }
 
 #pragma endregion MyStringIterator
+
+#pragma region MyStringConstIterator
+
+MyStringConstIterator::MyStringConstIterator(pointer ptr)
+	: m_ptr(ptr)
+{
+}
+
+MyStringConstIterator& MyStringConstIterator::operator++()
+{
+	m_ptr++;
+	return *this;
+}
+
+MyStringConstIterator MyStringConstIterator::operator++(int)
+{
+	MyStringConstIterator tmp{ *this };
+	++(*this);
+	return tmp;
+}
+
+MyStringConstIterator& MyStringConstIterator::operator--()
+{
+	m_ptr--;
+	return *this;
+}
+
+MyStringConstIterator MyStringConstIterator::operator--(int)
+{
+
+	MyStringConstIterator tmp{ *this };
+	--(*this);
+	return tmp;
+}
+
+MyStringConstIterator& MyStringConstIterator::operator+=(int offset)
+{
+	*this = *this + offset;
+	return *this;
+}
+
+MyStringConstIterator::reference MyStringConstIterator::operator[](int index) const
+{
+	return *(m_ptr + index);
+}
+
+MyStringConstIterator::reference MyStringConstIterator::operator*() const
+{
+	return *m_ptr;
+}
+
+MyStringConstIterator::pointer MyStringConstIterator::operator->()
+{
+	return m_ptr;
+}
+
+const MyStringConstIterator operator+(const MyStringConstIterator& iter, int offset)
+{
+	return { iter.m_ptr + offset };
+}
+
+const MyStringConstIterator operator+(int offset, const MyStringConstIterator& iter)
+{
+	return iter + offset;
+}
+
+MyStringConstIterator::difference_type operator-(const MyStringConstIterator& left, const MyStringConstIterator& right)
+{
+	return left.m_ptr - right.m_ptr;
+}
+
+bool operator==(const MyStringConstIterator& left, const MyStringConstIterator& right)
+{
+	return left.m_ptr == right.m_ptr;
+}
+
+bool operator!=(const MyStringConstIterator& left, const MyStringConstIterator& right)
+{
+	return left.m_ptr != right.m_ptr;
+}
+
+#pragma endregion MyStringConstIterator

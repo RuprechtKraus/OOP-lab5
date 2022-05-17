@@ -250,6 +250,15 @@ namespace MyStringClassTest
 			Assert::AreEqual('H', *it, L"");
 		}
 
+		TEST_METHOD(ChangeLetterThroughIterator)
+		{
+			MyString myString("Hello world!");
+			MyString::Iterator it = myString.begin();
+			*it = 'B';
+
+			Assert::AreEqual("Bello world!", myString.GetStringData(), L"Letter hasn't been correctly changed");
+		}
+
 		TEST_METHOD(IterateThroughNonConstantMyString)
 		{
 				MyString myString("Hello world!");
@@ -257,7 +266,7 @@ namespace MyStringClassTest
 
 				for (char c : myString)
 				{
-					Assert::AreEqual(myString[i++], c, L"Letters don't match");
+					Assert::AreEqual(myString[i++], c, L"Iterator points to wrong letter");
 				}
 		}
 
@@ -267,7 +276,7 @@ namespace MyStringClassTest
 			auto it{ myString.begin() };
 
 			it = it + 6;
-			Assert::AreEqual('w', *it, L"Letters don't match");
+			Assert::AreEqual('w', *it, L"Iterator points to wrong letter");
 		}
 
 		TEST_METHOD(AddIteratorToInteger)
@@ -276,7 +285,7 @@ namespace MyStringClassTest
 			auto it{ myString.begin() };
 
 			it = 6 + it;
-			Assert::AreEqual('w', *it, L"Letters don't match");
+			Assert::AreEqual('w', *it, L"Iterator points to wrong letter");
 		}
 
 		TEST_METHOD(AddAndAssignIntegerToIterator)
@@ -285,7 +294,7 @@ namespace MyStringClassTest
 			auto it{ myString.begin() };
 
 			it += 6;
-			Assert::AreEqual('w', *it, L"Letters don't match");
+			Assert::AreEqual('w', *it, L"Iterator points to wrong letter");
 		}
 
 		TEST_METHOD(DifferenceBetweenIterators)
@@ -295,6 +304,82 @@ namespace MyStringClassTest
 			auto end{ myString.end() };
 
 			Assert::IsTrue(5 == end - begin, L"Difference between iterators is wrong");
+		}
+
+		TEST_METHOD(SubscriptOperator)
+		{
+			MyString myString("Hello");
+			auto begin{ myString.begin() };
+
+			Assert::AreEqual('o', begin[4], L"Wrong letter recieved");
+		}
+	};
+
+	TEST_CLASS(MyStringConstIteratorClassTest)
+	{
+	public:
+
+		TEST_METHOD(DereferenceIterator)
+		{
+			const MyString myString("Hello");
+			auto cbegin{ myString.cbegin() };
+
+			Assert::AreEqual('H', *cbegin, L"Iterator points to wrong letter");
+		}
+
+		TEST_METHOD(IterateThroughConstantMyString)
+		{
+			const MyString myString("Hello world!");
+			int i{};
+
+			for (char c : myString)
+			{
+				Assert::AreEqual(myString[i++], c, L"Iterator points to wrong letter");
+			}
+		}
+
+		TEST_METHOD(AddIntegerToIterator)
+		{
+			const MyString myString("Hello world!");
+			auto it{ myString.begin() };
+
+			it = it + 6;
+			Assert::AreEqual('w', *it, L"Iterator points to wrong letter");
+		}
+
+		TEST_METHOD(AddIteratorToInteger)
+		{
+			const MyString myString("Hello world!");
+			auto it{ myString.begin() };
+
+			it = 6 + it;
+			Assert::AreEqual('w', *it, L"Iterator points to wrong letter");
+		}
+
+		TEST_METHOD(AddAndAssignIntegerToIterator)
+		{
+			const MyString myString("Hello world!");
+			auto it{ myString.begin() };
+
+			it += 6;
+			Assert::AreEqual('w', *it, L"Iterator points to wrong letter");
+		}
+
+		TEST_METHOD(DifferenceBetweenIterators)
+		{
+			const MyString myString("Hello");
+			auto begin{ myString.begin() };
+			auto end{ myString.end() };
+
+			Assert::IsTrue(5 == end - begin, L"Difference between iterators is wrong");
+		}
+
+		TEST_METHOD(SubscriptOperator)
+		{
+			const MyString myString("Hello world!");
+			auto begin{ myString.begin() };
+
+			Assert::AreEqual('o', begin[4], L"Wrong letter recieved");
 		}
 	};
 }

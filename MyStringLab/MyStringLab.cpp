@@ -4,11 +4,9 @@
 
 int main()
 {
-	MyString str("Hello");
-	auto a{ str.begin() };
-	auto b{ str.end() };
-
-	std::cout << b - a;
+	const std::string str("Hello");
+	MyString myString("Hello");
+	auto it = myString.cbegin();
 
 	return 0;
 }
