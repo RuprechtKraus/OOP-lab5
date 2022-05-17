@@ -66,6 +66,8 @@ class MyString
 public:
 	using Iterator = MyStringIterator;
 	using ConstIterator = MyStringConstIterator;
+	using ReverseIterator = std::reverse_iterator<MyStringIterator>;
+	using ConstReverseIterator = std::reverse_iterator<MyStringConstIterator>;
 
 	MyString() noexcept;
 	MyString(const char* pStr);
@@ -106,6 +108,12 @@ public:
 	ConstIterator end() const;
 	ConstIterator cbegin() const;
 	ConstIterator cend() const;
+	ReverseIterator rbegin();
+	ReverseIterator rend();
+	ConstReverseIterator rbegin() const;
+	ConstReverseIterator rend() const;
+	ConstReverseIterator crbegin() const;
+	ConstReverseIterator crend() const;
 
 private:
 	void SetEmpty() noexcept;

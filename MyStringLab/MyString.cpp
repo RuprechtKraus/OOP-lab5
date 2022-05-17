@@ -277,6 +277,36 @@ MyString::ConstIterator MyString::cend() const
 	return end();
 }
 
+MyString::ReverseIterator MyString::rbegin()
+{
+	return ReverseIterator(end());
+}
+
+MyString::ReverseIterator MyString::rend()
+{
+	return ReverseIterator(begin());
+}
+
+MyString::ConstReverseIterator MyString::rbegin() const
+{
+	return ConstReverseIterator(end());
+}
+
+MyString::ConstReverseIterator MyString::rend() const
+{
+	return ConstReverseIterator(begin());
+}
+
+MyString::ConstReverseIterator MyString::crbegin() const
+{
+	return rbegin();
+}
+
+MyString::ConstReverseIterator MyString::crend() const
+{
+	return rend();
+}
+
 #pragma endregion MyString
 
 #pragma region MyStringIterator

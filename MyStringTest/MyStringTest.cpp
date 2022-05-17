@@ -259,7 +259,7 @@ namespace MyStringClassTest
 			Assert::AreEqual("Bello world!", myString.GetStringData(), L"Letter hasn't been correctly changed");
 		}
 
-		TEST_METHOD(IterateThroughNonConstantMyString)
+		TEST_METHOD(IterateThroughMyString)
 		{
 				MyString myString("Hello world!");
 				int i{};
@@ -312,6 +312,25 @@ namespace MyStringClassTest
 			auto begin{ myString.begin() };
 
 			Assert::AreEqual('o', begin[4], L"Wrong letter recieved");
+		}
+
+		TEST_METHOD(DereferenceReverseIterator)
+		{
+			MyString myString("Hello");
+			auto rbegin{ myString.rbegin() };
+
+			Assert::AreEqual('o', *rbegin, L"Wrong letter recieved");
+		}
+
+		TEST_METHOD(IterateThroughMyStringReversively)
+		{
+			MyString myString("Hello world!");
+			size_t i{ myString.GetLength() };
+
+			for (auto it = myString.rbegin(); it != myString.rend(); it++)
+			{
+				Assert::AreEqual(myString[--i], *it, L"Wrong letter recieved");
+			}
 		}
 	};
 
@@ -380,6 +399,25 @@ namespace MyStringClassTest
 			auto begin{ myString.begin() };
 
 			Assert::AreEqual('o', begin[4], L"Wrong letter recieved");
+		}
+
+		TEST_METHOD(DereferenceReverseIterator)
+		{
+			const MyString myString("Hello");
+			auto rbegin{ myString.rbegin() };
+
+			Assert::AreEqual('o', *rbegin, L"Wrong letter recieved");
+		}
+
+		TEST_METHOD(IterateThroughMyStringReversively)
+		{
+			const MyString myString("Hello world!");
+			size_t i{ myString.GetLength() };
+
+			for (auto it = myString.rbegin(); it != myString.rend(); it++)
+			{
+				Assert::AreEqual(myString[--i], *it, L"Wrong letter recieved");
+			}
 		}
 	};
 }
