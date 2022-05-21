@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "MyString.h"
 #include <sstream>
+#include <algorithm>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -345,6 +346,20 @@ namespace MyStringClassTest
 			{
 				Assert::AreEqual(myString[--i], *it, L"Wrong letter recieved");
 			}
+		}
+
+		TEST_METHOD(FindMaxElementInString)
+		{
+			MyString myString("0123456789");
+			auto it{ std::max_element(myString.cbegin(), myString.cend()) };
+			Assert::AreEqual('9', *it, L"Max element received is not 9");
+		}
+
+		TEST_METHOD(ReverseString)
+		{
+			MyString myString("0123456789");
+			std::reverse(myString.begin(), myString.end());
+			VerifyMyString(myString, "9876543210", 10);
 		}
 	};
 
