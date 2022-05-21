@@ -30,6 +30,13 @@ namespace MyStringClassTest
 			VerifyMyString(myString, cstr, 9);
 		}
 
+		TEST_METHOD(CreateStringFromPointerToEmptyCharString)
+		{
+			char cstr[] = "";
+			MyString myString(cstr);
+			VerifyMyString(myString, cstr, 0);
+		}
+
 		TEST_METHOD(CreateStringFromPointerToCharWithLength)
 		{
 			char cstr[] = "Some data";
@@ -236,6 +243,13 @@ namespace MyStringClassTest
 
 			ss >> myString;
 			VerifyMyString(myString, "Hello_world!", 12);
+		}
+
+		TEST_METHOD(GetSubstring)
+		{
+			MyString myString("Hello world");
+			MyString substr(myString.SubString(0, 5));
+			VerifyMyString(substr, "Hello", 5);
 		}
 	};
 

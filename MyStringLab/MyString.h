@@ -1,65 +1,7 @@
 #pragma once
+#include "MyStringIterator.h"
 #include <stdexcept>
 #include <string>
-
-class MyStringIterator
-{
-public:
-	using iterator_category = std::random_access_iterator_tag;
-	using difference_type = std::ptrdiff_t;
-	using value_type = char;
-	using pointer = value_type*;
-	using reference = value_type&;
-
-	MyStringIterator(pointer ptr);
-
-	MyStringIterator& operator++();
-	MyStringIterator operator++(int);
-	MyStringIterator& operator--();
-	MyStringIterator operator--(int);
-	MyStringIterator& operator+=(int offset);
-	reference operator[](int index) const;
-	reference operator*() const;
-	pointer operator->();
-	friend const MyStringIterator operator+(const MyStringIterator& iter, int offset);
-	friend const MyStringIterator operator+(int offset, const MyStringIterator& iter);
-	friend difference_type operator-(const MyStringIterator& left, const MyStringIterator& right);
-	friend bool operator==(const MyStringIterator& left, const MyStringIterator& right);
-	friend bool operator!=(const MyStringIterator& left, const MyStringIterator& right);
-
-private:
-	pointer m_ptr;
-};
-
-class MyStringConstIterator
-{
-public:
-	using iterator_category = std::random_access_iterator_tag;
-	using difference_type = std::ptrdiff_t;
-	using value_type = char;
-	using pointer = const value_type*;
-	using reference = const value_type&;
-
-	MyStringConstIterator(pointer ptr);
-
-	MyStringConstIterator& operator++();
-	MyStringConstIterator operator++(int);
-	MyStringConstIterator& operator--();
-	MyStringConstIterator operator--(int);
-	MyStringConstIterator& operator+=(int offset);
-	reference operator[](int index) const;
-	reference operator*() const;
-	pointer operator->();
-	friend const MyStringConstIterator operator+(const MyStringConstIterator& iter, int offset);
-	friend const MyStringConstIterator operator+(int offset, const MyStringConstIterator& iter);
-	friend difference_type operator-(const MyStringConstIterator& left, const MyStringConstIterator& right);
-	friend bool operator==(const MyStringConstIterator& left, const MyStringConstIterator& right);
-	friend bool operator!=(const MyStringConstIterator& left, const MyStringConstIterator& right);
-
-protected:
-	pointer m_ptr;
-};
-
 
 class MyString
 {
@@ -69,27 +11,27 @@ public:
 	using ReverseIterator = std::reverse_iterator<MyStringIterator>;
 	using ConstReverseIterator = std::reverse_iterator<MyStringConstIterator>;
 
-	MyString() noexcept;
+	MyString();
 	MyString(const char* pStr);
 	MyString(const char* pStr, size_t length);
-	MyString(const MyString& other) noexcept;
+	MyString(const MyString& other);
 	MyString(MyString&& other) noexcept;
-	MyString(const std::string& str) noexcept;
+	MyString(const std::string& str);
 	~MyString() noexcept;
 
-	MyString& operator=(const MyString& other) noexcept;
+	MyString& operator=(const MyString& other);
 	MyString& operator=(MyString&& other) noexcept;
-	MyString& operator+=(const MyString& other) noexcept;
+	MyString& operator+=(const MyString& other);
 
-	friend MyString operator+(const MyString& left, const MyString& right) noexcept;
+	friend MyString operator+(const MyString& left, const MyString& right);
 	friend bool operator==(const MyString& left, const MyString& right) noexcept;
 	friend bool operator!=(const MyString& left, const MyString& right) noexcept;
 	friend bool operator<(const MyString& left, const MyString& right) noexcept;
 	friend bool operator<=(const MyString& left, const MyString& right) noexcept;
 	friend bool operator>(const MyString& left, const MyString& right) noexcept;
 	friend bool operator>=(const MyString& left, const MyString& right) noexcept;
-	friend std::ostream& operator<<(std::ostream& os, const MyString& myString) noexcept;
-	friend std::istream& operator>>(std::istream& is, MyString& myString) noexcept;
+	friend std::ostream& operator<<(std::ostream& os, const MyString& myString);
+	friend std::istream& operator>>(std::istream& is, MyString& myString);
 
 	const char& operator[](size_t index) const;
 	char& operator[](size_t index);
@@ -102,21 +44,20 @@ public:
 	MyString SubString(size_t start, size_t length = SIZE_MAX) const;
 	void Clear() noexcept;
 
-	Iterator begin();
-	Iterator end();
-	ConstIterator begin() const;
-	ConstIterator end() const;
-	ConstIterator cbegin() const;
-	ConstIterator cend() const;
-	ReverseIterator rbegin();
-	ReverseIterator rend();
-	ConstReverseIterator rbegin() const;
-	ConstReverseIterator rend() const;
-	ConstReverseIterator crbegin() const;
-	ConstReverseIterator crend() const;
+	Iterator begin() noexcept;
+	Iterator end() noexcept;
+	ConstIterator begin() const noexcept;
+	ConstIterator end() const noexcept;
+	ConstIterator cbegin() const noexcept;
+	ConstIterator cend() const noexcept;
+	ReverseIterator rbegin() noexcept;
+	ReverseIterator rend() noexcept;
+	ConstReverseIterator rbegin() const noexcept;
+	ConstReverseIterator rend() const noexcept;
+	ConstReverseIterator crbegin() const noexcept;
+	ConstReverseIterator crend() const noexcept;
 
 private:
-	void SetEmpty() noexcept;
 	void AllocateMemoryAndCopyString(size_t size, const char* source);
 
 	char* m_data{ nullptr };
