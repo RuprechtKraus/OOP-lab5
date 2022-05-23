@@ -10,7 +10,7 @@ public:
 	using pointer = value_type*;
 	using reference = value_type&;
 
-	MyStringIterator(pointer ptr);
+	MyStringIterator(pointer ptr); // TODO: Добавить конструктор по умолчанию
 
 	MyStringIterator& operator++();
 	MyStringIterator operator++(int);
@@ -30,6 +30,7 @@ private:
 	pointer m_ptr;
 };
 
+// TODO: Избавиться от дублирования кода. 1: наследование. 2: использовать шаблоны
 class MyStringConstIterator
 {
 public:
@@ -39,7 +40,7 @@ public:
 	using pointer = const value_type*;
 	using reference = const value_type&;
 
-	MyStringConstIterator(pointer ptr);
+	MyStringConstIterator(pointer ptr); // TODO: Добавить конструктор по умолчанию
 
 	MyStringConstIterator& operator++();
 	MyStringConstIterator operator++(int);
@@ -48,8 +49,9 @@ public:
 	MyStringConstIterator& operator+=(int offset);
 	reference operator[](int index) const;
 	reference operator*() const;
-	pointer operator->();
-	friend const MyStringConstIterator operator+(const MyStringConstIterator& iter, int offset);
+	pointer operator->(); // TODO: Бесполезно
+	// TODO: Итераторы произвольного доступа должны иметь операторы сравнения
+	friend const MyStringConstIterator operator+(const MyStringConstIterator& iter, int offset); // TODO: использовать ptrdiff_t ибо смещ. может быть отриц.
 	friend const MyStringConstIterator operator+(int offset, const MyStringConstIterator& iter);
 	friend difference_type operator-(const MyStringConstIterator& left, const MyStringConstIterator& right);
 	friend bool operator==(const MyStringConstIterator& left, const MyStringConstIterator& right);

@@ -74,7 +74,8 @@ namespace MyStringClassTest
 
 		TEST_METHOD(CantCreateStringFromNullPointer)
 		{
-			auto createMyString = []() { MyString myString(nullptr); };
+			char* null{ nullptr };
+			auto createMyString = [null]() { MyString myString(null); };
 			Assert::ExpectException<std::invalid_argument>(createMyString, L"Created string from null pointer");
 		}
 
@@ -251,6 +252,35 @@ namespace MyStringClassTest
 			MyString myString("Hello world");
 			MyString substr(myString.SubString(0, 5));
 			VerifyMyString(substr, "Hello", 5);
+		}
+
+		TEST_METHOD(GetSubstringWithStartOutOfBounds)
+		{
+			MyString myString("Hello world");
+			auto getSubstring = [&myString]() { myString.SubString(15, 5); };
+			Assert::ExpectException<std::out_of_range>(getSubstring, L"Expected out_of_range exception");
+		}
+
+		TEST_METHOD(GetSubstringWithLengthOutOfBounds)
+		{
+			MyString myString("Hello world");
+			MyString substr(myString.SubString(6, 50));
+			VerifyMyString(substr, "world", 5);
+		}
+
+		TEST_METHOD(GetSubstringFromEmptyString)
+		{
+			MyString myString("Hello world");
+			myString.Clear();
+			MyString substr(myString.SubString(0, 5));
+			VerifyMyString(substr, "", 0);
+		}
+
+		TEST_METHOD(GetSubstringWithNullCharacters)
+		{
+			MyString myString("Hello wo\0rld", 12);
+			MyString substr(myString.SubString(6, 5));
+			VerifyMyString(substr, "wo", 2);
 		}
 	};
 

@@ -60,6 +60,7 @@ const MyStringIterator operator+(const MyStringIterator& iter, int offset)
 	return { iter.m_ptr + offset };
 }
 
+// TODO: использовать ptrdiff_t ибо смещ. может быть отриц.
 const MyStringIterator operator+(int offset, const MyStringIterator& iter)
 {
 	return iter + offset;

@@ -41,7 +41,7 @@ public:
 
 	size_t GetLength() const noexcept;
 	const char* GetStringData() const noexcept;
-	MyString SubString(size_t start, size_t length = SIZE_MAX) const;
+	MyString SubString(size_t start, size_t length = std::numeric_limits<size_t>::max()) const;
 	void Clear() noexcept;
 
 	Iterator begin() noexcept;
@@ -59,6 +59,7 @@ public:
 
 private:
 	void AllocateMemoryAndCopyString(size_t size, const char* source);
+	MyString(char** pStr);
 
 	char* m_data{ nullptr };
 	size_t m_size{ 0 };

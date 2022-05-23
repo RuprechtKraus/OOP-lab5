@@ -1,5 +1,4 @@
 #include "MyString.h"
-#include <cassert>
 #include <iostream>
 #include <stdexcept>
 
@@ -35,7 +34,7 @@ MyString::MyString(const char* pStr, size_t length)
 
 MyString::MyString(const MyString& other)
 {
-	AllocateMemoryAndCopyString(other.m_size, other.m_data);
+	AllocateMemoryAndCopyString(other.GetLength(), other.GetStringData());
 }
 
 MyString::MyString(MyString&& other) noexcept
@@ -45,8 +44,13 @@ MyString::MyString(MyString&& other) noexcept
 
 MyString::MyString(const std::string& str)
 {
-
 	AllocateMemoryAndCopyString(str.size(), str.c_str());
+}
+
+MyString::MyString(char** pStr)
+{
+	std::swap(m_data, *pStr);
+	m_size = strlen(m_data);
 }
 
 MyString& MyString::operator=(const MyString& other)
@@ -90,14 +94,22 @@ MyString operator+(const MyString& left, const MyString& right)
 	memcpy(buff + left.m_size, right.m_data, right.m_size);
 	buff[size] = '\0';
 
-	MyString tmp(buff);
-	delete[] buff;
-
-	return tmp;
+	try
+	{
+		MyString tmp(buff); //TODO: Лишнее копирование буфера
+		delete[] buff;
+		return tmp;
+	}
+	catch (const std::bad_alloc& e)
+	{
+		delete[] buff;
+		throw;
+	}
 }
 
 bool operator==(const MyString& left, const MyString& right) noexcept
 {
+	// TODO: Сравнивать сначала длину, а потом посимвольно
 	return MyString::Compare(left, right) == 0;
 }
 
@@ -108,21 +120,23 @@ bool operator!=(const MyString& left, const MyString& right) noexcept
 
 bool operator<(const MyString& left, const MyString& right) noexcept
 {
-	return MyString::Compare(left, right) == -1;
+	return MyString::Compare(left, right) == -1; // TODO: Сранивать не с -1 а с <0
 }
 
 bool operator<=(const MyString& left, const MyString& right) noexcept
 {
+	// TODO: Сделать проверку за один проход
 	return left < right || left == right;
 }
 
 bool operator>(const MyString& left, const MyString& right) noexcept
 {
-	return MyString::Compare(left, right) == 1;
+	return MyString::Compare(left, right) == 1; // TODO: Сранивать не с 1 а с >0
 }
 
 bool operator>=(const MyString& left, const MyString& right) noexcept
 {
+	// TODO: Сделать проверку за один проход
 	return left > right || left == right;
 }
 
@@ -157,7 +171,6 @@ std::istream& operator>>(std::istream& is, MyString& myString)
 			}
 			catch (const std::bad_alloc& e)
 			{
-				delete[] buff;
 				delete[] tmp;
 				throw;
 			}
@@ -166,12 +179,19 @@ std::istream& operator>>(std::istream& is, MyString& myString)
 		buff[len++] = ch;
 	}
 
-	MyString tmp(buff, len);
-	MyString::Swap(myString, tmp);
+	try
+	{
+		MyString tmp(buff, len);
+		MyString::Swap(myString, tmp);
+	}
+	catch (const std::bad_alloc& e)
+	{
+		delete[] buff;
+		throw;
+	}
 
 	is.clear();
 	delete[] buff;
-
 	return is;
 }
 
@@ -207,29 +227,34 @@ const char* MyString::GetStringData() const noexcept
 
 MyString MyString::SubString(size_t start, size_t length) const
 {
+	if (m_size == 0)
+	{
+		return GetStringData();
+	}
+
 	if (start >= m_size)
 	{
 		throw std::out_of_range("Start position is out of bounds");
 	}
 
-	char* buff{};
-	try
+	if (start + length > m_size)
 	{
-		buff = new char[length + 1];
-		memcpy(buff, m_data + start, length);
-		buff[length] = '\0';
-		MyString substr(buff);
+		length = m_size - start;
+	}
 
-		delete[] buff;
-		return substr;
-	}
-	catch (const std::bad_alloc& e)
-	{
-		delete[] buff;
-		throw;
-	}
+	const char* dataPtr{ GetStringData() + start };
+	size_t buffSize{ strlen(dataPtr) };
+	char* buff = new char[buffSize + 1];
+
+	strncpy_s(buff, buffSize + 1, dataPtr, length);
+	buff[buffSize] = '\0';
+
+	MyString substr(&buff);
+
+	return substr;
 }
 
+// TODO: Добавить в других функциях проверку на нулевой указатель в текущей строке
 void MyString::Clear() noexcept
 {
 	delete[] m_data;
@@ -247,6 +272,7 @@ void MyString::AllocateMemoryAndCopyString(size_t size, const char* source)
 
 int MyString::Compare(const MyString& left, const MyString& right) noexcept
 {
+	// TODO: Сравнивать независимо от длины
 	if (left.m_size < right.m_size)
 	{
 		return -1;
