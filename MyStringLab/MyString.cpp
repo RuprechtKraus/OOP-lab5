@@ -103,8 +103,7 @@ MyString operator+(const MyString& left, const MyString& right)
 
 bool operator==(const MyString& left, const MyString& right) noexcept
 {
-	// TODO: Сравнивать сначала длину, а потом посимвольно
-	return MyString::Compare(left, right) == 0;
+	return left.m_size == right.m_size && MyString::Compare(left, right) == 0;
 }
 
 bool operator!=(const MyString& left, const MyString& right) noexcept
@@ -114,24 +113,24 @@ bool operator!=(const MyString& left, const MyString& right) noexcept
 
 bool operator<(const MyString& left, const MyString& right) noexcept
 {
-	return MyString::Compare(left, right) == -1; // TODO: Сранивать не с -1 а с <0
+	return MyString::Compare(left, right) == -1;
 }
 
 bool operator<=(const MyString& left, const MyString& right) noexcept
 {
-	// TODO: Сделать проверку за один проход
-	return left < right || left == right;
+	int res{ MyString::Compare(left, right) };
+	return res == -1 || res == 0;
 }
 
 bool operator>(const MyString& left, const MyString& right) noexcept
 {
-	return MyString::Compare(left, right) == 1; // TODO: Сранивать не с 1 а с >0
+	return MyString::Compare(left, right) == 1;
 }
 
 bool operator>=(const MyString& left, const MyString& right) noexcept
 {
-	// TODO: Сделать проверку за один проход
-	return left > right || left == right;
+	int res{ MyString::Compare(left, right) };
+	return res == 1 || res == 0;
 }
 
 std::ostream& operator<<(std::ostream& os, const MyString& myString)
@@ -223,7 +222,7 @@ MyString MyString::SubString(size_t start, size_t length) const
 {
 	if (m_size == 0)
 	{
-		return GetStringData();
+		return "";
 	}
 
 	if (start >= m_size)
@@ -248,7 +247,6 @@ MyString MyString::SubString(size_t start, size_t length) const
 	return substr;
 }
 
-// TODO: Добавить в других функциях проверку на нулевой указатель в текущей строке
 void MyString::Clear() noexcept
 {
 	delete[] m_data;
@@ -266,18 +264,25 @@ void MyString::AllocateMemoryAndCopyString(size_t size, const char* source)
 
 int MyString::Compare(const MyString& left, const MyString& right) noexcept
 {
-	// TODO: Сравнивать независимо от длины
-	if (left.m_size < right.m_size)
+	size_t minLen{ std::min(left.m_size, right.m_size) };
+	int res{ memcmp(left.GetStringData(), right.GetStringData(), minLen) };
+
+	if (res == 0)
 	{
-		return -1;
+		if (left.m_size < right.m_size)
+		{
+			return -1;
+		}
+		
+		if (left.m_size > right.m_size)
+		{
+			return 1;
+		}
+
+		return 0;
 	}
 
-	if (left.m_size > right.m_size)
-	{
-		return 1;
-	}
-
-	return memcmp(left.GetStringData(), right.GetStringData(), left.m_size);
+	return res;
 }
 
 void MyString::Swap(MyString& left, MyString& right) noexcept

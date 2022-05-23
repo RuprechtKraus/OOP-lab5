@@ -193,6 +193,9 @@ namespace MyStringClassTest
 			Assert::IsTrue(MyString("abc") <= MyString("abc"), L"Strings must be equal");
 			Assert::IsFalse(MyString("abcd") < MyString("abc"), L"Right string must be less");
 			Assert::IsFalse(MyString("abcd") <= MyString("abc"), L"Right string must be less");
+			Assert::IsTrue(MyString("abc") < MyString("abd"), L"Left string must be less");
+			Assert::IsFalse(MyString("zebra") < MyString("australopithecine"), L"Left string must be less");
+			Assert::IsFalse(MyString("zebra") <= MyString("australopithecine"), L"Left string must be less");
 		}
 
 		TEST_METHOD(CompareGreater)
@@ -202,6 +205,9 @@ namespace MyStringClassTest
 			Assert::IsTrue(MyString("abcd") > MyString("abc"), L"Left string must be greater");
 			Assert::IsTrue(MyString("abcd") >= MyString("abc"), L"Left string must be greater");
 			Assert::IsTrue(MyString("abcd") >= MyString("abcd"), L"String must be equal");
+			Assert::IsTrue(MyString("abd") > MyString("abc"), L"Left string must be greater");
+			Assert::IsTrue(MyString("zebra") > MyString("australopithecine"), L"Left string must be greater");
+			Assert::IsTrue(MyString("zebra") >= MyString("australopithecine"), L"Left string must be greater");
 		}
 
 		TEST_METHOD(SubscriptOperatorWithIndexWithinBounds)
