@@ -191,11 +191,6 @@ std::istream& operator>>(std::istream& is, MyString& myString)
 
 const char& MyString::operator[](size_t index) const
 {
-	if (!m_data)
-	{
-		throw std::runtime_error("String is empty");
-	}
-
 	if (index > m_size)
 	{
 		throw std::out_of_range("Subscript is out of bounds");
@@ -206,11 +201,6 @@ const char& MyString::operator[](size_t index) const
 
 char& MyString::operator[](size_t index)
 {
-	if (!m_data)
-	{
-		throw std::runtime_error("String is empty");
-	}
-
 	if (index > m_size)
 	{
 		throw std::out_of_range("Subscript is out of bounds");

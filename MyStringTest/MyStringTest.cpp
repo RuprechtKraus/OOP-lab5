@@ -219,16 +219,6 @@ namespace MyStringClassTest
 			Assert::ExpectException<std::out_of_range>(callSubscript, L"Exception had to be thrown");
 		}
 
-		TEST_METHOD(SubscriptOperatorOnEmptyString)
-		{
-			const MyString constMyString;
-			MyString myString;
-			Assert::ExpectException<std::runtime_error>([&constMyString]() { constMyString[0]; }, 
-				L"Subscript operator didn't throw exception");
-			Assert::ExpectException<std::runtime_error>([&myString]() { myString[0]; }, 
-				L"Subscript operator didn't throw exception");
-		}
-
 		TEST_METHOD(PrintMyStringToStream)
 		{
 			MyString myString("Hello world!");
