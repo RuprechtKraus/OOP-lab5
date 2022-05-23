@@ -94,17 +94,8 @@ MyString operator+(const MyString& left, const MyString& right)
 	memcpy(buff + left.m_size, right.m_data, right.m_size);
 	buff[size] = '\0';
 
-	try
-	{
-		MyString tmp(buff); //TODO: Лишнее копирование буфера
-		delete[] buff;
-		return tmp;
-	}
-	catch (const std::bad_alloc& e)
-	{
-		delete[] buff;
-		throw;
-	}
+	MyString tmp(&buff);
+	return tmp;
 }
 
 bool operator==(const MyString& left, const MyString& right) noexcept
