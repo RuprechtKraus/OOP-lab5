@@ -19,7 +19,6 @@ public:
 	MyStringIterator& operator+=(int offset);
 	reference operator[](int index) const;
 	reference operator*() const;
-	pointer operator->();
 	friend const MyStringIterator operator+(const MyStringIterator& iter, int offset);
 	friend const MyStringIterator operator+(int offset, const MyStringIterator& iter);
 	friend difference_type operator-(const MyStringIterator& left, const MyStringIterator& right);
@@ -49,7 +48,6 @@ public:
 	MyStringConstIterator& operator+=(int offset);
 	reference operator[](int index) const;
 	reference operator*() const;
-	pointer operator->(); // TODO: Бесполезно
 	// TODO: Итераторы произвольного доступа должны иметь операторы сравнения
 	friend const MyStringConstIterator operator+(const MyStringConstIterator& iter, int offset); // TODO: использовать ptrdiff_t ибо смещ. может быть отриц.
 	friend const MyStringConstIterator operator+(int offset, const MyStringConstIterator& iter);

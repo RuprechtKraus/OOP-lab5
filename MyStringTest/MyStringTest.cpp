@@ -161,6 +161,14 @@ namespace MyStringClassTest
 			VerifyMyString(hello, "Hello world!", 12);
 		}
 
+		TEST_METHOD(ConcatenateTwoEmptyStrings)
+		{
+			MyString a;
+			MyString b;
+			MyString res{ a + b };
+			VerifyMyString(res, "", 0);
+		}
+
 		TEST_METHOD(CompareEqual)
 		{
 			Assert::IsTrue(MyString("string") == MyString("string"), L"Equal string compare failed");
@@ -209,6 +217,16 @@ namespace MyStringClassTest
 			MyString myString("Moss");
 			auto callSubscript = [&myString]() { myString[10]; };
 			Assert::ExpectException<std::out_of_range>(callSubscript, L"Exception had to be thrown");
+		}
+
+		TEST_METHOD(SubscriptOperatorOnEmptyString)
+		{
+			const MyString constMyString;
+			MyString myString;
+			Assert::ExpectException<std::runtime_error>([&constMyString]() { constMyString[0]; }, 
+				L"Subscript operator didn't throw exception");
+			Assert::ExpectException<std::runtime_error>([&myString]() { myString[0]; }, 
+				L"Subscript operator didn't throw exception");
 		}
 
 		TEST_METHOD(PrintMyStringToStream)

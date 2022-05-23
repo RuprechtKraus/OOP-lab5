@@ -50,11 +50,6 @@ MyStringIterator::reference MyStringIterator::operator*() const
 	return *m_ptr;
 }
 
-MyStringIterator::pointer MyStringIterator::operator->()
-{
-	return m_ptr;
-}
-
 const MyStringIterator operator+(const MyStringIterator& iter, int offset)
 {
 	return { iter.m_ptr + offset };
@@ -131,11 +126,6 @@ MyStringConstIterator::reference MyStringConstIterator::operator[](int index) co
 MyStringConstIterator::reference MyStringConstIterator::operator*() const
 {
 	return *m_ptr;
-}
-
-MyStringConstIterator::pointer MyStringConstIterator::operator->()
-{
-	return m_ptr;
 }
 
 const MyStringConstIterator operator+(const MyStringConstIterator& iter, int offset)

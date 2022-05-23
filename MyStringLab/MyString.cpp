@@ -5,10 +5,7 @@
 #pragma region MyString
 
 MyString::MyString()
-	: m_data(new char[1])
-	, m_size(0)
 {
-	m_data[0] = '\0';
 }
 
 MyString::MyString(const char* pStr)
@@ -34,7 +31,7 @@ MyString::MyString(const char* pStr, size_t length)
 
 MyString::MyString(const MyString& other)
 {
-	AllocateMemoryAndCopyString(other.GetLength(), other.GetStringData());
+	AllocateMemoryAndCopyString(other.m_size, other.GetStringData());
 }
 
 MyString::MyString(MyString&& other) noexcept
@@ -49,6 +46,12 @@ MyString::MyString(const std::string& str)
 
 MyString::MyString(char** pStr)
 {
+	// Имеет ли смысл выбрасывать это исключение для такого специфичного конструктора?
+	if (!(pStr && *pStr))
+	{
+		throw std::invalid_argument("Null pointer");	
+	}
+
 	std::swap(m_data, *pStr);
 	m_size = strlen(m_data);
 }
@@ -90,8 +93,8 @@ MyString operator+(const MyString& left, const MyString& right)
 	size_t size{ left.m_size + right.m_size };
 	char* buff = new char[size + 1];
 
-	memcpy(buff, left.m_data, left.m_size);
-	memcpy(buff + left.m_size, right.m_data, right.m_size);
+	memcpy(buff, left.GetStringData(), left.m_size);
+	memcpy(buff + left.m_size, right.GetStringData(), right.m_size);
 	buff[size] = '\0';
 
 	MyString tmp(&buff);
@@ -133,7 +136,7 @@ bool operator>=(const MyString& left, const MyString& right) noexcept
 
 std::ostream& operator<<(std::ostream& os, const MyString& myString)
 {
-	return os.write(myString.m_data, myString.m_size);
+	return os.write(myString.GetStringData(), myString.m_size);
 }
 
 std::istream& operator>>(std::istream& is, MyString& myString)
@@ -188,7 +191,12 @@ std::istream& operator>>(std::istream& is, MyString& myString)
 
 const char& MyString::operator[](size_t index) const
 {
-	if (index >= m_size)
+	if (!m_data)
+	{
+		throw std::runtime_error("String is empty");
+	}
+
+	if (index > m_size)
 	{
 		throw std::out_of_range("Subscript is out of bounds");
 	}
@@ -198,7 +206,12 @@ const char& MyString::operator[](size_t index) const
 
 char& MyString::operator[](size_t index)
 {
-	if (index >= m_size)
+	if (!m_data)
+	{
+		throw std::runtime_error("String is empty");
+	}
+
+	if (index > m_size)
 	{
 		throw std::out_of_range("Subscript is out of bounds");
 	}
@@ -274,7 +287,7 @@ int MyString::Compare(const MyString& left, const MyString& right) noexcept
 		return 1;
 	}
 
-	return memcmp(left.m_data, right.m_data, left.m_size);
+	return memcmp(left.GetStringData(), right.GetStringData(), left.m_size);
 }
 
 void MyString::Swap(MyString& left, MyString& right) noexcept
