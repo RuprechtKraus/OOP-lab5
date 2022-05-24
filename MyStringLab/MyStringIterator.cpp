@@ -1,110 +1,54 @@
 #include "MyStringIterator.h"
-
-#pragma region MyStringIterator
-
-MyStringIterator::MyStringIterator(pointer ptr)
-	: m_ptr(ptr)
-{
-}
-
-MyStringIterator& MyStringIterator::operator++()
-{
-	m_ptr++;
-	return *this;
-}
-
-MyStringIterator MyStringIterator::operator++(int)
-{
-	MyStringIterator tmp{ *this };
-	++(*this);
-	return tmp;
-}
-
-MyStringIterator& MyStringIterator::operator--()
-{
-	m_ptr--;
-	return *this;
-}
-
-MyStringIterator MyStringIterator::operator--(int)
-{
-
-	MyStringIterator tmp{ *this };
-	--(*this);
-	return tmp;
-}
-
-MyStringIterator& MyStringIterator::operator+=(int offset)
-{
-	*this = *this + offset;
-	return *this;
-}
-
-MyStringIterator::reference MyStringIterator::operator[](int index) const
-{
-	return *(m_ptr + index);
-}
-
-MyStringIterator::reference MyStringIterator::operator*() const
-{
-	return *m_ptr;
-}
-
-const MyStringIterator operator+(const MyStringIterator& iter, int offset)
-{
-	return { iter.m_ptr + offset };
-}
-
-// TODO: использовать ptrdiff_t ибо смещ. может быть отриц.
-const MyStringIterator operator+(int offset, const MyStringIterator& iter)
-{
-	return iter + offset;
-}
-
-MyStringIterator::difference_type operator-(const MyStringIterator& left, const MyStringIterator& right)
-{
-	return left.m_ptr - right.m_ptr;
-}
-
-bool operator==(const MyStringIterator& left, const MyStringIterator& right)
-{
-	return left.m_ptr == right.m_ptr;
-}
-
-bool operator!=(const MyStringIterator& left, const MyStringIterator& right)
-{
-	return left.m_ptr != right.m_ptr;
-}
-
-#pragma endregion MyStringIterator
+#include <cassert>
 
 #pragma region MyStringConstIterator
 
-MyStringConstIterator::MyStringConstIterator(pointer ptr)
-	: m_ptr(ptr)
+MyStringConstIterator::MyStringConstIterator() noexcept
+	: m_ptr(nullptr)
+	, m_cptr(nullptr)
 {
 }
 
-MyStringConstIterator& MyStringConstIterator::operator++()
+MyStringConstIterator::MyStringConstIterator(pointer ptr, const Container* cptr) noexcept
+	: m_ptr(ptr)
+	, m_cptr(cptr)
 {
+}
+
+MyStringConstIterator::reference MyStringConstIterator::operator*() const noexcept
+{
+	_STL_ASSERT(m_ptr >= m_cptr->m_data && m_ptr < (m_cptr->m_data + m_cptr->m_size),
+		"Cannot dereference mystring iterator because it's out of range");
+	return *m_ptr;
+}
+
+MyStringConstIterator::reference MyStringConstIterator::operator[](difference_type index) const noexcept
+{
+	return *(*this + index);
+}
+
+MyStringConstIterator& MyStringConstIterator::operator++() noexcept
+{
+	_STL_ASSERT(m_ptr < (m_cptr->m_data + m_cptr->m_size), "Cannot increment mystring iterator past end");
 	m_ptr++;
 	return *this;
 }
 
-MyStringConstIterator MyStringConstIterator::operator++(int)
+MyStringConstIterator MyStringConstIterator::operator++(int) noexcept
 {
 	MyStringConstIterator tmp{ *this };
 	++(*this);
 	return tmp;
 }
 
-MyStringConstIterator& MyStringConstIterator::operator--()
+MyStringConstIterator& MyStringConstIterator::operator--() noexcept
 {
+	_STL_ASSERT(m_ptr > m_cptr->m_data, "Cannot decrement mystring iterator before begin");
 	m_ptr--;
 	return *this;
 }
 
-MyStringConstIterator MyStringConstIterator::operator--(int)
+MyStringConstIterator MyStringConstIterator::operator--(int) noexcept
 {
 
 	MyStringConstIterator tmp{ *this };
@@ -112,45 +56,182 @@ MyStringConstIterator MyStringConstIterator::operator--(int)
 	return tmp;
 }
 
-MyStringConstIterator& MyStringConstIterator::operator+=(int offset)
+MyStringConstIterator& MyStringConstIterator::operator+=(difference_type offset) noexcept
 {
-	*this = *this + offset;
+#if _DEBUG
+	VerifyOffset(offset);
+#endif // _DEBUG
+	m_ptr += offset;
 	return *this;
 }
 
-MyStringConstIterator::reference MyStringConstIterator::operator[](int index) const
+MyStringConstIterator& MyStringConstIterator::operator-=(difference_type offset) noexcept
 {
-	return *(m_ptr + index);
+	return *this += -offset;
 }
 
-MyStringConstIterator::reference MyStringConstIterator::operator*() const
-{
-	return *m_ptr;
-}
-
-const MyStringConstIterator operator+(const MyStringConstIterator& iter, int offset)
-{
-	return { iter.m_ptr + offset };
-}
-
-const MyStringConstIterator operator+(int offset, const MyStringConstIterator& iter)
-{
-	return iter + offset;
-}
-
-MyStringConstIterator::difference_type operator-(const MyStringConstIterator& left, const MyStringConstIterator& right)
+MyStringConstIterator::difference_type operator-(const MyStringConstIterator& left, const MyStringConstIterator& right) noexcept
 {
 	return left.m_ptr - right.m_ptr;
 }
 
-bool operator==(const MyStringConstIterator& left, const MyStringConstIterator& right)
+const MyStringConstIterator operator+(const MyStringConstIterator& iter,
+	MyStringConstIterator::difference_type offset) noexcept
+{
+	MyStringConstIterator tmp{ iter };
+	tmp += offset;
+	return tmp;
+}
+const MyStringConstIterator operator+(MyStringConstIterator::difference_type offset,
+	const MyStringConstIterator& iter) noexcept
+{
+	return iter + offset;
+}
+
+const MyStringConstIterator operator-(const MyStringConstIterator& iter,
+	MyStringConstIterator::difference_type offset) noexcept
+{
+	return { iter.m_ptr - offset, iter.m_cptr };
+}
+
+const MyStringConstIterator operator-(MyStringConstIterator::difference_type offset,
+	const MyStringConstIterator& iter) noexcept
+{
+	return iter - offset;
+}
+
+bool operator==(const MyStringConstIterator& left, const MyStringConstIterator& right) noexcept
 {
 	return left.m_ptr == right.m_ptr;
 }
 
-bool operator!=(const MyStringConstIterator& left, const MyStringConstIterator& right)
+bool operator!=(const MyStringConstIterator& left, const MyStringConstIterator& right) noexcept
 {
 	return left.m_ptr != right.m_ptr;
 }
 
+bool operator<(const MyStringConstIterator& left, const MyStringConstIterator& right) noexcept
+{
+	return left.m_ptr < right.m_ptr;
+}
+
+bool operator>(const MyStringConstIterator& left, const MyStringConstIterator& right) noexcept
+{
+	return right.m_ptr < left.m_ptr;
+}
+
+bool operator<=(const MyStringConstIterator& left, const MyStringConstIterator& right) noexcept
+{
+	return !(right.m_ptr < left.m_ptr);
+}
+
+bool operator>=(const MyStringConstIterator& left, const MyStringConstIterator& right) noexcept
+{
+	return !(left.m_ptr < right.m_ptr);
+}
+
+void MyStringConstIterator::VerifyOffset(difference_type offset) const noexcept
+{
+#if _DEBUG
+	if (offset == 0)
+	{
+		return;
+	}
+
+	if (offset < 0)
+	{
+		_STL_ASSERT(m_cptr->m_data - m_ptr <= offset, "Cannot seek mystring iterator before begin");
+	}
+
+	_STL_ASSERT((m_cptr->m_data + m_cptr->m_size) - m_ptr >= offset, "Cannot seek mystring iterator after end");
+#endif // _DEBUG
+}
+
 #pragma endregion MyStringConstIterator
+
+#pragma region MyStringIterator
+
+MyStringIterator::MyStringIterator()
+	: MyStringConstIterator(nullptr, nullptr)
+{
+}
+
+MyStringIterator::MyStringIterator(pointer ptr, const Container* cptr) noexcept
+	: MyStringConstIterator(ptr, cptr)
+{
+}
+
+MyStringIterator::reference MyStringIterator::operator*() const noexcept
+{
+	return const_cast<reference>(MyBase::operator*());
+}
+
+MyStringIterator::reference MyStringIterator::operator[](difference_type index) const noexcept
+{
+	return const_cast<reference>(MyBase::operator[](index));
+}
+
+MyStringIterator& MyStringIterator::operator++() noexcept
+{
+	MyBase::operator++();
+	return *this;
+}
+
+MyStringIterator MyStringIterator::operator++(int) noexcept
+{
+	MyStringIterator tmp{ *this };
+	MyBase::operator++();
+	return tmp;
+}
+
+MyStringIterator& MyStringIterator::operator--() noexcept
+{
+	MyBase::operator--();
+	return *this;
+}
+
+MyStringIterator MyStringIterator::operator--(int) noexcept
+{
+
+	MyStringIterator tmp{ *this };
+	MyBase::operator--();
+	return tmp;
+}
+
+MyStringIterator& MyStringIterator::operator+=(difference_type offset) noexcept
+{
+	MyBase::operator+=(offset);
+	return *this;
+}
+
+MyStringIterator& MyStringIterator::operator-=(difference_type offset) noexcept
+{
+	MyBase::operator-=(offset);
+	return *this;
+}
+
+const MyStringIterator operator+(const MyStringIterator& iter, MyStringIterator::difference_type offset) noexcept
+{
+	MyStringIterator tmp{ iter };
+	tmp += offset;
+	return tmp;
+}
+
+const MyStringIterator operator+(MyStringIterator::difference_type offset, const MyStringIterator& iter) noexcept
+{
+	return iter + offset;
+}
+
+const MyStringIterator operator-(const MyStringIterator& iter, MyStringIterator::difference_type offset) noexcept
+{
+	MyStringIterator tmp{ iter };
+	tmp -= offset;
+	return tmp;
+}
+
+const MyStringIterator operator-(MyStringIterator::difference_type offset, const MyStringIterator& iter) noexcept
+{
+	return iter - offset;
+}
+
+#pragma endregion MyStringIterator

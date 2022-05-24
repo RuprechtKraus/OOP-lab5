@@ -405,6 +405,11 @@ namespace MyStringClassTest
 			std::reverse(myString.begin(), myString.end());
 			VerifyMyString(myString, "9876543210", 10);
 		}
+
+		TEST_METHOD(CompareEqual)
+		{
+			MyString myString("Hello world!");
+		}
 	};
 
 	TEST_CLASS(MyStringConstIteratorClassTest)

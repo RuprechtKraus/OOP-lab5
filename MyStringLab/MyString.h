@@ -3,8 +3,14 @@
 #include <stdexcept>
 #include <string>
 
+class MyStringIterator;
+class MyStringConstIterator;
+
 class MyString
 {
+	friend MyStringIterator;
+	friend MyStringConstIterator;
+
 public:
 	using Iterator = MyStringIterator;
 	using ConstIterator = MyStringConstIterator;

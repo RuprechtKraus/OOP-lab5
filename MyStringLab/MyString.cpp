@@ -162,7 +162,7 @@ std::istream& operator>>(std::istream& is, MyString& myString)
 				memcpy(buff, tmp, len);
 				delete[] tmp;
 			}
-			catch (const std::bad_alloc& e)
+			catch (const std::bad_alloc&)
 			{
 				delete[] tmp;
 				throw;
@@ -177,7 +177,7 @@ std::istream& operator>>(std::istream& is, MyString& myString)
 		MyString tmp(buff, len);
 		MyString::Swap(myString, tmp);
 	}
-	catch (const std::bad_alloc& e)
+	catch (const std::bad_alloc&)
 	{
 		delete[] buff;
 		throw;
@@ -190,21 +190,13 @@ std::istream& operator>>(std::istream& is, MyString& myString)
 
 const char& MyString::operator[](size_t index) const
 {
-	if (index > m_size)
-	{
-		throw std::out_of_range("Subscript is out of bounds");
-	}
-
+	_STL_ASSERT(index <= m_size, "Mystring subscript out of range");
 	return m_data[index];
 }
 
 char& MyString::operator[](size_t index)
 {
-	if (index > m_size)
-	{
-		throw std::out_of_range("Subscript is out of bounds");
-	}
-
+	_STL_ASSERT(index <= m_size, "Mystring subscript out of range");
 	return m_data[index];
 }
 
@@ -293,22 +285,22 @@ void MyString::Swap(MyString& left, MyString& right) noexcept
 
 MyString::Iterator MyString::begin() noexcept
 {
-	return Iterator(m_data);
+	return Iterator(m_data, this);
 }
 
 MyString::Iterator MyString::end() noexcept
 {
-	return Iterator(m_data + m_size);
+	return Iterator(m_data + m_size, this);
 }
 
 MyString::ConstIterator MyString::begin() const noexcept
 {
-	return ConstIterator(m_data);
-}
+	return ConstIterator(m_data, this);
+}	
 
 MyString::ConstIterator MyString::end() const noexcept
 {
-	return ConstIterator(m_data + m_size);
+	return ConstIterator(m_data + m_size, this);
 }
 
 MyString::ConstIterator MyString::cbegin() const noexcept
